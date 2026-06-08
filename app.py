@@ -8,7 +8,7 @@ import re
 # ---------- page config ----------
 st.set_page_config(page_title="CodeLume – AI Coding Assistant", page_icon="💡")
 st.title("💡 CodeLume")
-st.caption("Your personal AI code illuminator – powered by DeepSeek Coder 6.7B (free via Cloudflare)")
+st.caption("Your personal AI code illuminator – powered by Qwen 2.5 Coder 32B (free via Cloudflare)")
 
 # ---------- database setup ----------
 DATABASE_URL = os.environ["DATABASE_URL"]
@@ -68,15 +68,15 @@ if not API_TOKEN.startswith("Bearer "):
     API_TOKEN = f"Bearer {API_TOKEN}"
 
 API_BASE = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/ai/run/"
-# Upgraded model: DeepSeek Coder 6.7B – far better at writing full apps
-MODEL = "@hf/thebloke/deepseek-coder-6.7b-instruct-awq"
+# The best free coding model on Cloudflare – 32B parameters
+MODEL = "@cf/qwen/qwen2.5-coder-32b-instruct"
 
 def get_ai_response(messages):
     headers = {"Authorization": API_TOKEN}
     payload = {
         "messages": messages,
-        "max_tokens": 2000,
-        "temperature": 0.2
+        "max_tokens": 4000,     # Increased for longer, complete code outputs
+        "temperature": 0.2      # Low randomness for precise code
     }
     response = requests.post(API_BASE + MODEL, json=payload, headers=headers)
     response.raise_for_status()
